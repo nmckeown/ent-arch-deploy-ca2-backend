@@ -146,9 +146,11 @@ public class Persistence {
   }
 
   public static void main(String[] args) {
+    String envMongoUri = System.getenv("MONGODB_URI");
+
     Logger.getLogger( "org.mongodb.driver" ).setLevel(Level.WARNING);
-    ConnectionString mongoUri = new ConnectionString("mongodb+srv://ead2024:ead2024.@ead-2023-24.lpclwdo.mongodb.net/");
-    String dbName = "ead_ca2";
+    ConnectionString mongoUri = new ConnectionString(envMongoUri);
+    String dbName = "ent-arch-deploy-ca2-mongo";
     String collectionName = "ead_2024";
 
     CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
