@@ -46,7 +46,34 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} 
           MONGODB_CONN: ${{ secrets.MONGODB_CONN }} 
           MONGODB_URI: ${{ secrets.MONGODB_URI }} 
-  build:
+
+  # scans code depenencies for security vulns
+  owasp_dependency_check:
+    name: OWASP Depenency Check
+    if: true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Depcheck
+        uses: dependency-check/Dependency-Check_Action@main
+        id: Depcheck
+        with:
+          project: 'BMI'
+          path: '.'
+          format: 'HTML'    
+          args: >
+            --failOnCVSS 8            
+          # fail if CVSS score (CVE scoring system) is High >=8
+          
+      - name: Upload Test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: Depcheck report
+          path: ${{ github.workspace }}/reports
+          
+  build_image:
     # ubuntu runner
     runs-on: ubuntu-latest
 
