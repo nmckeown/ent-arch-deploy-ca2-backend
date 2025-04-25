@@ -51,6 +51,7 @@ jobs:
   owasp_dependency_check:
     name: OWASP Depenency Check
     if: true
+    needs: [ scan_code ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -74,8 +75,9 @@ jobs:
           path: ${{ github.workspace }}/reports
 
   build_image:
-    name: Build Docker Image
-    # ubuntu runner
+    name: Build Docker Image & Publish
+    if: true
+    needs: [ owasp_dependency_check ]
     runs-on: ubuntu-latest
 
     # job steps
